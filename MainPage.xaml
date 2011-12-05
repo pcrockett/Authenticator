@@ -47,6 +47,11 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="{Binding Path=AccountName}" Grid.Row="0" TextWrapping="NoWrap" Style="{StaticResource PhoneTextSubtleStyle}"/>
                         <TextBlock Text="{Binding Path=Code}" Grid.Row="1" TextWrapping="NoWrap" Margin="12,-6,12,24" Style="{StaticResource PhoneTextExtraLargeStyle}" />
+                        <toolkit:ContextMenuService.ContextMenu>
+                            <toolkit:ContextMenu>
+                                <toolkit:MenuItem Header="pin to start" Click="ItemContent_PinToStart" Tag="{Binding}"/>
+                            </toolkit:ContextMenu>
+                        </toolkit:ContextMenuService.ContextMenu>
                     </Grid>
                 </DataTemplate>
             </toolkit:MultiselectList.ItemTemplate>

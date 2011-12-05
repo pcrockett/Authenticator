@@ -90,6 +90,19 @@ namespace Authenticator
             {
                 if (MessageBox.Show("Are you sure you want to delete the selected account?", "Delete", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                 {
+                    foreach (ShellTile st in ShellTile.ActiveTiles)
+                    {
+                        if (st.NavigationUri.OriginalString == "/") continue;
+
+                        string[] splitString = st.NavigationUri.OriginalString.Split(Convert.ToChar("?"));
+                        splitString[1] = splitString[1].Replace("secret=", "");
+
+                        if (((Account)this.lstAccounts.SelectedItems[0]).SecretKey == splitString[1])
+                        {
+                            st.Delete();
+                        }
+                    }
+
                     while (this.lstAccounts.SelectedItems.Count > 0)
                     {
                         _application.Database.Remove((Account)this.lstAccounts.SelectedItems[0]);
@@ -100,6 +113,19 @@ namespace Authenticator
             {
                 if (MessageBox.Show("Are you sure you want to delete the selected accounts?", "Delete", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                 {
+                    foreach (ShellTile st in ShellTile.ActiveTiles)
+                    {
+                        if (st.NavigationUri.OriginalString == "/") continue;
+
+                        string[] splitString = st.NavigationUri.OriginalString.Split(Convert.ToChar("?"));
+                        splitString[1] = splitString[1].Replace("secret=", "");
+
+                        if (((Account)this.lstAccounts.SelectedItems[0]).SecretKey == splitString[1])
+                        {
+                            st.Delete();
+                        }
+                    }
+
                     while (this.lstAccounts.SelectedItems.Count > 0)
                     {
                         _application.Database.Remove((Account)this.lstAccounts.SelectedItems[0]);
@@ -198,6 +224,21 @@ namespace Authenticator
                     container.IsSelected = !container.IsSelected;
                 }
             }
+        }
+
+        private void ItemContent_PinToStart(object sender, RoutedEventArgs e)
+        {
+            Account account = (Account)((MenuItem)sender).Tag;
+            
+            StandardTileData std = new StandardTileData
+            {
+                Title = "Authenticator",
+                BackTitle = account.AccountName,
+                BackContent = "Verification code is " + account.Code
+            };
+
+
+            ShellTile.Create(new Uri("/MainPage.xaml?secret=" + account.SecretKey, UriKind.Relative), std);
         }
     }
 }

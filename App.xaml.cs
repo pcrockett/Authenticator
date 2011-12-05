@@ -16,6 +16,7 @@ using System.IO.IsolatedStorage;
 using System.IO;
 using System.Xml.Serialization;
 using System.Xml;
+using Microsoft.Phone.Scheduler;
 
 namespace Authenticator
 {
@@ -42,6 +43,15 @@ namespace Authenticator
 
             // Phone-specific initialization
             InitializePhoneApplication();
+
+            if (ScheduledActionService.Find("AuthenticatorAgent") != null)
+                ScheduledActionService.Remove("AuthenticatorAgent");
+
+            PeriodicTask pt = new PeriodicTask("AuthenticatorAgent");
+            pt.Description = "Updates live tile PIN display for Authenticator accounts.";
+
+            ScheduledActionService.Add(pt);
+            // ScheduledActionService.LaunchForTest("AuthenticatorAgent", new TimeSpan(0, 0, 1));
 
             this.Database = new Accounts();
             IsolatedStorageFile iso = IsolatedStorageFile.GetUserStoreForApplication();
